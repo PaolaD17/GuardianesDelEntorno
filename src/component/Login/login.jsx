@@ -69,7 +69,7 @@ const Login = ({ setIsAuthenticated }) => {
       <div className="container d-flex justify-content-center align-items-center vh-100">
         <div className="w-100 mb-4 text-center">
           <img
-            src="/Guardianes (1)-Photoroom.png"  // Reemplaza con la URL o ruta de tu imagen
+            src="/TituloPrincipal.png"  // Reemplaza con la URL o ruta de tu imagen
             alt="Guardianes del Entorno"
             className="img-fluid"  // Esto asegura que la imagen se ajuste bien en diferentes tamaños de pantalla
           />

@@ -84,10 +84,10 @@ useEffect(() => {
             {/* Imagen centrada arriba */}
             <div className="w-100 mb-4 text-center">
                 <img
-                src="/Guardianes (1)-Photoroom.png"  // Asegúrate de que la imagen esté en la carpeta 'public'
-                alt="Guardianes del Entorno"
+                src="/TituloSecundario.png"  // Asegúrate de que la imagen esté en la carpeta 'public'
+                alt="Titulo de la web"
                 className="img-fluid"  // La imagen se ajusta al tamaño y se separa un poco del formulario
-                style={{ maxWidth: "540px" }}  // Puedes ajustar el tamaño de la imagen aquí
+                style={{ maxWidth: "750px" }}  // Puedes ajustar el tamaño de la imagen aquí
                 />
             </div>
 

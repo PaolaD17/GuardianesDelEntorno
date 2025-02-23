@@ -38,41 +38,52 @@ const ListaAreasNaturales = () => {
     };
 
 return (
-    <div className="container mt-4">
-    <div className="card shadow-lg">
-        <div className="card-body">
-            {/* Encabezado con botón alineado a la derecha */}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="card-title m-0">Lista de Áreas Naturales</h2>
-                <button 
-                    className="btn btn-primary" 
-                    onClick={() => navigate("/AgregarAreaNatural")}
-                >
-                Agregar área natural
-                </button>
+    <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+        {/* Imagen centrada arriba */}
+        <div className="w-100 mb-4 text-center">
+            <img
+            src="/TituloSecundario.png"  // Asegúrate de que la imagen esté en la carpeta 'public'
+            alt="TituloSecundario"
+            className="img-fluid"  // La imagen se ajusta al tamaño y se separa un poco del formulario
+            style={{ maxWidth: "750px" }}  // Puedes ajustar el tamaño de la imagen aquí
+            />
+        </div>
+        <div className="container mt-4">
+            <div className="card shadow-lg">
+                <div className="card-body">
+                    {/* Encabezado con botón alineado a la derecha */}
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2 className="card-title m-0">Lista de Áreas Naturales</h2>
+                        <button 
+                            className="btn btn-primary" 
+                            onClick={() => navigate("/AgregarAreaNatural")}
+                        >
+                        Agregar área natural
+                        </button>
+                    </div>
+
+                    {error && <div className="alert alert-danger text-center">{error}</div>}
+
+                    <ul className="list-group">
+                        {areas.map((area) => (
+                            <li key={area.id} className="list-group-item">
+                                <h5 className="mb-1">{area.name}</h5>
+                                <p className="text-muted">{area.email}</p>
+                            </li>
+                        ))}
+                    </ul>
+
+                    {/* Botón "Cargar más" corregido */}
+                    <button 
+                        onClick={handleLoadMore} 
+                        className="btn btn-secondary w-100 mt-3"
+                    >
+                        Cargar más
+                    </button>
+                </div>
             </div>
-
-            {error && <div className="alert alert-danger text-center">{error}</div>}
-
-            <ul className="list-group">
-                {areas.map((area) => (
-                    <li key={area.id} className="list-group-item">
-                        <h5 className="mb-1">{area.name}</h5>
-                        <p className="text-muted">{area.email}</p>
-                    </li>
-                ))}
-            </ul>
-
-            {/* Botón "Cargar más" corregido */}
-            <button 
-                onClick={handleLoadMore} 
-                className="btn btn-secondary w-100 mt-3"
-            >
-                Cargar más
-            </button>
         </div>
     </div>
-</div>
 
   )
 }
