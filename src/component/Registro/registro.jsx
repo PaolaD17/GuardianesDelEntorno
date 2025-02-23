@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"; // Usamos Link en lugar de <a>
 
 const Registro = () => {
   const [nombre, setNombre] = useState("");
-  const [edad, setEdad] = useState("");
+  const [nombreDeUsuario, setNombreDeUsuario] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -15,7 +15,7 @@ const Registro = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombre || !edad || !email || !password) {
+    if (!nombre || !nombreDeUsuario || !email || !password) {
       setError("Por favor, complete todos los campos.");
       return;
     }
@@ -30,7 +30,7 @@ const Registro = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ nombre, edad, email, password }),
+          body: JSON.stringify({ nombre, nombreDeUsuario, email, password }),
         }
       );
 
@@ -77,7 +77,7 @@ const Registro = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Nombre Completo</label>
+            <label className="form-label">Nombre</label>
             <input
               type="text"
               className="form-control"
@@ -87,17 +87,17 @@ const Registro = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Edad</label>
+            <label className="form-label">Nombre de usuario</label>
             <input
-              type="number"
+              type="text"
               className="form-control"
-              value={edad}
-              onChange={(e) => setEdad(e.target.value)}
+              value={nombreDeUsuario}
+              onChange={(e) => setNombreDeUsuario(e.target.value)}
               required
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Correo Electrónico</label>
+            <label className="form-label">E-Mail</label>
             <input
               type="email"
               className="form-control"
