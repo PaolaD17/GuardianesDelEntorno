@@ -1,11 +1,14 @@
 import React from 'react'
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ListaAreasNaturales = () => {
     const [areas, setAreas] = useState([]);
     const [error, setError] = useState("");
     const [page, setPage] = useState(1);
     const pageSize = 10;
+
+    const navigate = useNavigate();
 
     const fetchAreas = async (pageNumber) => {
 
@@ -34,30 +37,43 @@ const ListaAreasNaturales = () => {
         fetchAreas();
     };
 
-  return (
+return (
     <div className="container mt-4">
-        <div className="card shadow-lg">
-            <div className="card-body">
-                <h2 className="card-title text-center mb-4">Lista de Áreas Naturales</h2>
-                
-                {error && <div className="alert alert-danger text-center">{error}</div>}
-                
-                <ul className="list-group">
-                    {areas.map((area) => (
-                        <li key={area.id} className="list-group-item">
-                            <h5 className="mb-1">{area.name}</h5>
-                            <p className="text-muted">{area.email}</p>
-                        </li>
-                    ))}
-                </ul>
+    <div className="card shadow-lg">
+        <div className="card-body">
+            {/* Encabezado con botón alineado a la derecha */}
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h2 className="card-title m-0">Lista de Áreas Naturales</h2>
+                <button 
+                    className="btn btn-primary" 
+                    onClick={() => navigate("/AgregarAreaNatural")}
+                >
+                Agregar área natural
+                </button>
             </div>
+
+            {error && <div className="alert alert-danger text-center">{error}</div>}
+
+            <ul className="list-group">
+                {areas.map((area) => (
+                    <li key={area.id} className="list-group-item">
+                        <h5 className="mb-1">{area.name}</h5>
+                        <p className="text-muted">{area.email}</p>
+                    </li>
+                ))}
+            </ul>
+
+            {/* Botón "Cargar más" corregido */}
             <button 
                 onClick={handleLoadMore} 
                 className="btn btn-secondary w-100 mt-3"
             >
+                Cargar más
             </button>
         </div>
     </div>
+</div>
+
   )
 }
 

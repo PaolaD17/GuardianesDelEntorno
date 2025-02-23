@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom"; // Solo importar Routes y Route
-import ListaEspeciesAvistadas from "./component/ListaEspeciesAvistadas/ListaEspeciesAvistadas";
-import Login from "./component/login";
-import Registro from "./component/registro";
-import PantallaPrincipal from "./component/pantallaPrincipal"; // Importar el componente PantallaPrincipal
-import ListaAreasNaturales from "./component/ListaAreasNaturales/ListaAreasNaturales";
+import Login from "./component/Login/login";
+import Registro from "./component/Registro/registro";
+import PantallaPrincipal from "./component/PantallaPrincipal/pantallaPrincipal"; // Importar el componente PantallaPrincipal
+import ListaAreasNaturales from "./component/AreasNaturales/ListaAreasNaturales";
+import ListaEspeciesAvistadas from "./component/EspeciesAvistadas/ListaEspeciesAvistadas";
+import AgregarAreaNatural from "./component/AreasNaturales/AgregarAreaNatural";
+import AgregarEspecieAvistada from "./component/EspeciesAvistadas/AgregarEspecieAvistada";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,10 +30,23 @@ function App() {
         path="/ListaEspeciesAvistadas"
         element={isAuthenticated ? <ListaEspeciesAvistadas /> : <Login setIsAuthenticated={setIsAuthenticated}/>}
       />
+
       {/* Ruta para la lista de áreas, solo accesible si está autenticado */}
       <Route
         path="/ListaAreasNaturales"
         element={isAuthenticated ? <ListaAreasNaturales /> : <Login setIsAuthenticated={setIsAuthenticated}/>}
+      />
+
+      {/* Ruta para agregar áreas naturales, solo accesible si está autenticado */}
+      <Route
+        path="/AgregarAreaNatural"
+        element={isAuthenticated ? <AgregarAreaNatural /> : <Login setIsAuthenticated={setIsAuthenticated}/>}
+      />
+      
+      {/* Ruta para agregar especies avistadas, solo accesible si está autenticado */}
+      <Route
+        path="/AgregarEspecieAvistada"
+        element={isAuthenticated ? <AgregarEspecieAvistada /> : <Login setIsAuthenticated={setIsAuthenticated}/>}
       />
     </Routes>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "../userSlice"; // Importar la acción de Redux
+import { setUser } from "../../userSlice"; // Importar la acción de Redux
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link, useNavigate } from "react-router-dom"; // Importa el hook useNavigate
 import './login.css'; // Archivo de estilos

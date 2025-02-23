@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ListaEspeciesAvistadas = () => {
     const [especies, setEspecies] = useState([]);
@@ -7,8 +8,9 @@ const ListaEspeciesAvistadas = () => {
     const [page, setPage] = useState(1);
     const pageSize = 10;
 
-    const fetchEspecies = async (pageNumber) => {
+    const navigate = useNavigate();
 
+    const fetchEspecies = async (pageNumber) => {
         try {
             const response = await fetch(
                 `https://mammal-excited-tarpon.ngrok-free.app/api/species/list?page=1&pageSize=10`,
@@ -30,18 +32,28 @@ const ListaEspeciesAvistadas = () => {
                 setError("Error al obtener las áreas naturales.");
             }
     };
+
     const handleLoadMore = () => {
         fetchEspecies();
     };
 
-  return (
-    <div className="container mt-4">
+    return (
+        <div className="container mt-4">
         <div className="card shadow-lg">
             <div className="card-body">
-                <h2 className="card-title text-center mb-4">Lista de Especies Avistadas</h2>
-                
+                {/* Encabezado con botón alineado a la derecha */}
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                    <h2 className="card-title m-0">Lista de Especies Avistadas</h2>
+                    <button 
+                        className="btn btn-primary" 
+                        onClick={() => navigate("/AgregarEspecieAvistada")}
+                    >
+                    Agregar especie avistada
+                    </button>
+                </div>
+    
                 {error && <div className="alert alert-danger text-center">{error}</div>}
-                
+    
                 <ul className="list-group">
                     {especies.map((especie) => (
                         <li key={especie.id} className="list-group-item">
@@ -50,15 +62,18 @@ const ListaEspeciesAvistadas = () => {
                         </li>
                     ))}
                 </ul>
+    
+                {/* Botón "Cargar más" corregido */}
+                <button 
+                    onClick={handleLoadMore} 
+                    className="btn btn-secondary w-100 mt-3"
+                >
+                    Cargar más
+                </button>
             </div>
-            <button 
-                onClick={handleLoadMore} 
-                className="btn btn-secondary w-100 mt-3"
-            >
-            </button>
         </div>
     </div>
-  )
+    )
 }
 
 export default ListaEspeciesAvistadas

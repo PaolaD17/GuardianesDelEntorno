@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Para redirigir
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom"; // Usamos Link en lugar de <a>
+// import { Link } from "react-router-dom"; // Usamos Link en lugar de <a>
 
-const AgregarDatosNuevos = () => {
+const AgregarAreaNatural = () => {
   const [nombre, setNombre] = useState("");
-  const [nombreDeUsuario, setNombreDeUsuario] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [tipo, setTipo] = useState("");
+  const [pais, setPais] = useState("");
+  const [estado, setEstado] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
@@ -15,7 +15,7 @@ const AgregarDatosNuevos = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombre || !nombreDeUsuario || !email || !password) {
+    if (!nombre || !tipo || !pais || !estado) {
       setError("Por favor, complete todos los campos.");
       return;
     }
@@ -24,13 +24,13 @@ const AgregarDatosNuevos = () => {
 
     try {
       const response = await fetch(
-        "https://mammal-excited-tarpon.ngrok-free.app/api/user/register?secret=TallerReact2025!",
+        "https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/insert?secret=TallerReact2025!",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ nombre, nombreDeUsuario, email, password }),
+          body: JSON.stringify({ nombre, tipo, pais, estado }),
         }
       );
 
@@ -45,12 +45,12 @@ const AgregarDatosNuevos = () => {
 
       const data = await response.json();
       if (data.success) {
-        setMessage("Registro exitoso. Redirigiendo al login...");
+        setMessage("Ingreso exitoso. Redirigiendo al listado...");
         setTimeout(() => {
           navigate("/"); // Redirigir al login después de 2 segundos
         }, 2000);
       } else {
-        setError("Error en el registro. Intente nuevamente.");
+        setError("Error al ingresar. Intente nuevamente.");
       }
     } catch (error) {
       setError("Error al conectar con el servidor");
@@ -71,7 +71,7 @@ const AgregarDatosNuevos = () => {
 
       {/* Contenedor del formulario centrado abajo */}
       <div className="card p-4 shadow-lg" style={{ width: "350px" }}>
-        <h2 className="text-center mb-3">Registro</h2>
+        <h2 className="text-center mb-3">Ingresar área natural</h2>
         {error && <div className="alert alert-danger">{error}</div>}
         {message && <div className="alert alert-success">{message}</div>}
 
@@ -87,48 +87,50 @@ const AgregarDatosNuevos = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Nombre de usuario</label>
+            <label className="form-label">Tipo</label>
+            <select
+              className="form-control"
+              value={tipo}
+              onChange={(e) => setTipo(e.target.value)}
+              required
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="opcion1">Opción 1</option>
+              <option value="opcion2">Opción 2</option>
+              <option value="opcion3">Opción 3</option>
+            </select>
+          </div>
+          <div className="mb-3">
+            <label className="form-label">País</label>
             <input
               type="text"
               className="form-control"
-              value={nombreDeUsuario}
-              onChange={(e) => setNombreDeUsuario(e.target.value)}
+              value={pais}
+              onChange={(e) => setPais(e.target.value)}
               required
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">E-Mail</label>
-            <input
-              type="email"
+            <label className="form-label">Estado de conservación</label>
+            <select
               className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={estado}
+              onChange={(e) => setEstado(e.target.value)}
               required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Contraseña</label>
-            <input
-              type="password"
-              className="form-control"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            >
+              <option value="">Seleccione una opción</option>
+              <option value="opcion1">Estable</option>
+              <option value="opcion2">En riesgo</option>
+              <option value="opcion3">Crítico</option>
+            </select>
           </div>
           <button type="submit" className="btn btn-primary w-100">
-            Registrarse
+            Agregar
           </button>
         </form>
-        <div className="text-center mt-3">
-          <span>¿Ya tienes usuario? </span>
-          <Link to="/" className="text-primary fw-bold">
-            Inicia sesión
-          </Link>
-        </div>
       </div>
     </div>
   );
 };
 
-export default AgregarDatosNuevos;
+export default AgregarAreaNatural;
