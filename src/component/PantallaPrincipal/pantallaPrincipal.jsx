@@ -23,11 +23,6 @@ const PantallaPrincipal = () => {
             ESPECIES AVISTADAS
         </Link>
         </div>
-        <div className="col-6 mb-3">
-        <Link to="/AgregarDatosNuevos" className="btn btn-secondary btn-lg w-100">
-            Ingresar datos nuevos
-        </Link>
-        </div>
     </div>
     </div>
 
