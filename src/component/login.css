@@ -1,0 +1,33 @@
+
+  
+  /* Login.css */
+
+/* Fondo con imagen y desenfoque */
+.login-page {
+    position: relative;
+    height: 100vh;
+    background-image: url('https://wallpapers.com/images/featured/paisajes-naturales-k9tfch0hpfjbaxel.jpg'); /* Cambia la URL de la imagen */
+    background-size: cover;
+    background-position: center;
+    filter: blur(0px); /* Desenfoque */
+    overflow: hidden; /* Evita que el contenido se desborde */
+  }
+  
+  /* Asegurarse de que el formulario esté por encima */
+  .login-page .container {
+    position: relative;
+    z-index: 10; /* Coloca el formulario encima del fondo desenfocado */
+  }
+  
+  /* Estilo del contenedor de la tarjeta */
+  .card {
+    position: relative; /* Asegura que esté por encima del fondo */
+    z-index: 0; /* Asegura que el formulario esté encima de todo */
+    background-color: rgb(255, 255, 255); /* Fondo semitransparente */
+  }
+  
+  /* Opcional: Estilo de color para el fondo de la página */
+  body {
+    background-color: #3e612756;
+  }
+  
