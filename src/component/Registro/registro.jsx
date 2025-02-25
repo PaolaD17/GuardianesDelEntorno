@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Para redirigir
+import { useDispatch } from "react-redux";
+import { setUser } from "../../userSlice"; // Importar la acción de Redux
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom"; // Usamos Link en lugar de <a>
+import { Link, useNavigate } from "react-router-dom"; // Importa el hook useNavigate
+import './registro.css'; // Archivo de estilos
 
-const Registro = () => {
+const Registro = ({ setIsAuthenticated }) => {
   const [nombre, setNombre] = useState("");
   const [nombreDeUsuario, setNombreDeUsuario] = useState("");
   const [email, setEmail] = useState("");
@@ -11,11 +13,12 @@ const Registro = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
+  const dispatch = useDispatch(); // Hook para usar Redux
   const navigate = useNavigate(); // Hook para redirigir
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!nombre || !nombreDeUsuario || !email || !password) {
+    if (!email || !password) {
       setError("Por favor, complete todos los campos.");
       return;
     }
@@ -44,13 +47,19 @@ const Registro = () => {
       }
 
       const data = await response.json();
-      if (data.success) {
-        setMessage("Registro exitoso. Redirigiendo al login...");
-        setTimeout(() => {
-          navigate("/"); // Redirigir al login después de 2 segundos
-        }, 2000);
+      if (data.isValid && data.user) {
+        setMessage("Registro exitoso!!");
+
+        // Guardar usuario en Redux
+        dispatch(setUser(data.user));
+
+        // Marcar como autenticado
+        setIsAuthenticated(true);
+
+        // Redirigir a login
+        navigate("/login");
       } else {
-        setError("Error en el registro. Intente nuevamente.");
+        setError("Credenciales incorrectas");
       }
     } catch (error) {
       setError("Error al conectar con el servidor");
@@ -62,14 +71,14 @@ const Registro = () => {
       {/* Imagen centrada arriba */}
       <div className="w-100 mb-4 text-center">
         <img
-          src="/TituloSecundario.png"  // Asegúrate de que la imagen esté en la carpeta 'public'
+          src="/TituloSecundario.png"  // Asegúrate de que la imagen esté en 'public'
           alt="TituloSecundario"
-          className="img-fluid"  // La imagen se ajusta al tamaño y se separa un poco del formulario
-          style={{ maxWidth: "750px" }}  // Puedes ajustar el tamaño de la imagen aquí
+          className="img-fluid"
+          style={{ maxWidth: "750px" }}
         />
       </div>
 
-      {/* Contenedor del formulario centrado abajo */}
+      {/* Contenedor del formulario */}
       <div className="card p-4 shadow-lg" style={{ width: "350px" }}>
         <h2 className="text-center mb-3">Registro</h2>
         {error && <div className="alert alert-danger">{error}</div>}
@@ -120,6 +129,7 @@ const Registro = () => {
             Registrarse
           </button>
         </form>
+        
         <div className="text-center mt-3">
           <span>¿Ya tienes usuario? </span>
           <Link to="/" className="text-primary fw-bold">
@@ -132,6 +142,3 @@ const Registro = () => {
 };
 
 export default Registro;
-
-
-

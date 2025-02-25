@@ -82,7 +82,7 @@ useEffect(() => {
     return (
         <div className="d-flex flex-column justify-content-center align-items-center vh-100">
             {/* Imagen centrada arriba */}
-            <div className="w-100 mb-4 text-center">
+            <div className="fixed-top bg-white text-center py-2 shadow">
                 <img
                 src="/TituloSecundario.png"  // Asegúrate de que la imagen esté en la carpeta 'public'
                 alt="Titulo de la web"
