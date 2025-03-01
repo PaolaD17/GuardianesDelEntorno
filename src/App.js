@@ -18,6 +18,7 @@ import MisActividades from "./component/Actividades/MisActividades";
 import AgregarActividad from "./component/Actividades/AgregarActividad";
 import AreaNatural from "./component/AreasNaturales/AreaNatural";
 import ListaUsuarios from "./component/Usuarios/ListaUsuarios";
+import EspecieAvistada from "./component/EspeciesAvistadas/EspecieAvistada";
 
 
 function App() {
@@ -172,7 +173,12 @@ function App() {
 
       <Route
         path="/AreaNatural/:id"
-        element={isAuthenticated ? <AreaNatural /> : <Navigate to="/" />}
+        element={isAuthenticated ? <AreaNatural /> : <Navigate to="/" />}
+      />
+
+      <Route
+        path="/EspecieAvistada/:id"
+        element={isAuthenticated ? <EspecieAvistada /> : <Navigate to="/" />}
       />
 
     </Routes>

@@ -11,67 +11,64 @@ const PantallaPrincipal = ({ setIsAuthenticated }) => {
 
   return (
     <div>
-        <nav className="navbar navbar-expand-lg bg-body-tertiary w-100 fixed-top">
+      <nav className="navbar navbar-expand-lg bg-body-tertiary w-100 fixed-top">
         <div className="container-fluid">
+        <div className="text-center">
           <a className="navbar-brand" href="/">
             <img
-              src="TituloPrincipal.png"  // Reemplaza con la ruta correcta de tu imagen
+              src="TituloSecundario.png"
               alt="Icono de la web"
               className="img-fluid"
-              style={{ maxWidth: "200px" }}  // Ajusta el tamaño de la imagen aquí
+              style={{ maxWidth: "500px" }}
             />
           </a>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        </div>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Áreas Naturales
-                </a>
-                <ul className="dropdown-menu">
-                <li>
-                    <Link className="dropdown-item" to="/MisAreasNaturales">Mis áreas naturales</Link>
-                </li>
-                <li>
-                    <Link className="dropdown-item" to="/AgregarAreaNatural">Agregar área natural</Link>
-                </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Especies Avistadas
-                </a>
-                <ul className="dropdown-menu">
-                <li>
-                    <Link className="dropdown-item" to="/MisEspeciesAvistadas">Mis especies avistadas</Link>
-                </li>
-                <li>
-                    <Link className="dropdown-item" to="/AgregarEspecieAvistada">Agregar especie avistada</Link>
-                </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Actividades de conservación
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link className="dropdown-item" to="/MisActividades">Mis actividades</Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/AgregarActividad">Agregar actividad</Link>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-            <form className="d-flex" role="search">
-              <span className="me-2 align-self-center">
-                Hola, {user ? user.name : "Usuario"}
-              </span>
+            {/* Agregamos ms-auto para empujar el contenido a la derecha */}
+            <form className="d-flex ms-auto" role="search">
+              <div className="me-2 align-self-center">
+                <div className="dropdown">
+                  <button
+                    className="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    id="userDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Hola, {user ? user.name : "Usuario"}
+                  </button>
+                  <ul className="dropdown-menu" aria-labelledby="userDropdown">
+                    <li>
+                      <Link className="dropdown-item" to="/MisAreasNaturales">
+                        Mis áreas naturales
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/MisEspeciesAvistadas">
+                        Mis especies avistadas
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/MisActividades">
+                        Mis actividades de conservación
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <button
-                className="btn btn-outline-danger"
+                className="btn btn-outline-danger me-2"
                 type="button"
                 onClick={() => navigate("/ListaUsuarios")}
               >
@@ -92,6 +89,7 @@ const PantallaPrincipal = ({ setIsAuthenticated }) => {
           </div>
         </div>
       </nav>
+
       {/* Contenedor del contenido con padding-top para que no quede tapado */}
       <div className="container d-flex flex-column justify-content-center align-items-center vh-100">
         <div className="col-4 mb-3">
@@ -110,7 +108,6 @@ const PantallaPrincipal = ({ setIsAuthenticated }) => {
           </Link>
         </div>
       </div>
-
     </div>
   );
 };

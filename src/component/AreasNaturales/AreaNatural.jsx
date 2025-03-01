@@ -1,49 +1,190 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import AreaNatural from "./components/AreaNatural";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import'./AreaNatural.css';
 
 
-// const AreaNatural = () => {
-//     const { id } = useParams();  // Obtiene el ID desde la URL
-//     const [area, setArea] = useState(null);
-//     const [error, setError] = useState(null);
+const AreaNatural = ({user, setIsAuthenticated}) => {
+    const { id } = useParams();  // Obtiene el ID desde la URL
+    const [area, setArea] = useState([]);
+    const [error, setError] = useState(null);
 
-//     useEffect(() => {
-//         const fetchArea = async () => {
-//             try {
-//                 const apiUrl = "https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/${id}?secret=TallerReact2025!";
+    const navigate = useNavigate();
 
-//                 const response = await fetch(apiUrl);
+    useEffect(() => {
+        const fetchAreas = async () => {
+            try {
+                const apiUrl = `https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&Keyword=&AreaType=&Region=&ConservationStatus=&Page=1&PageSize=10000`;
 
-//                 if (!response.ok) {
-//                     throw new Error(`Error en la API: ${response.status}`);
-//                 }
+                console.log("Consultando API:", apiUrl);
 
-//                 const data = await response.json();
-//                 setArea(data);
-//             } catch (err) {
-//                 console.error("Error al obtener los detalles del área:", err);
-//                 setError("No se pudo cargar el área natural.");
-//             }
-//         };
+                const response = await fetch(apiUrl);
 
-//         fetchArea();
-//     }, [id]);  // Se ejecuta cuando cambia el ID
+                if (!response.ok) {
+                    throw new Error(`Error en la API: ${response.status}`);
+                }
 
-//     if (error) {
-//         return <div className="alert alert-danger">{error}</div>;
-//     }
+                const data = await response.json();
 
-//     if (!area) {
-//         return <p>Cargando...</p>;
-//     }
+                // Convertir id a número
+                const areaId = Number(id);
+                let foundArea = null;
 
-//     return (
-//         <div>
-//             <h1>{area.name}</h1>
-//             <p>{area.description}</p>
-//         </div>
-//     );
-// };
+                // 🔹 Recorremos todas las áreas y buscamos la que coincida con el ID
+                for (let i = 0; i < data.items.length; i++) {
+                    if (data.items[i].id === areaId) {
+                        foundArea = data.items[i];
+                        break;
+                    }
+                }
 
-// export default AreaNatural;
+                if (!foundArea) {
+                    throw new Error("Área no encontrada");
+                }
+
+                setArea(foundArea);
+            } catch (err) {
+                console.error("Error al obtener los detalles del área:", err);
+                setError("No se pudo cargar el área natural.");
+            }
+        };
+
+        fetchAreas();
+    }, [id]);  // Se ejecuta cuando cambia el ID
+
+    if (error) {
+        return <div className="alert alert-danger">{error}</div>;
+    }
+
+    if (!area) {
+        return <p>Cargando...</p>;
+    }
+
+    return (
+        <div>
+        <nav className="navbar navbar-expand-lg bg-body-tertiary w-100 fixed-top">
+            <div className="container-fluid">
+                <Link className="navbar-brand" to="/">
+                    <img
+                        src="/TituloPrincipal.png"
+                        alt="Icono de la web"
+                        className="img-fluid"
+                        style={{ maxWidth: "200px" }}
+                    />
+                </Link>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Áreas Naturales
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <Link className="dropdown-item" to="/ListaAreasNaturales">Mis áreas naturales</Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/AgregarAreaNatural">Agregar área natural</Link>
+                                </li>
+                            </ul>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Especies Avistadas
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <Link className="dropdown-item" to="/MisEspeciesAvistadas">Mis especies avistadas</Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/AgregarEspecieAvistada">Agregar especie avistada</Link>
+                                </li>
+                            </ul>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actividades
+                            </a>
+                            <ul className="dropdown-menu">
+                                <li>
+                                    <Link className="dropdown-item" to="/MisActividades">Mis actividades</Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/AgregarActividad">Agregar actividad</Link>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form className="d-flex" role="search">
+                        <div className="me-2 align-self-center">
+                        <div className="dropdown">
+                            <button
+                            className="btn btn-outline-secondary dropdown-toggle"
+                            type="button"
+                            id="userDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            >
+                            Hola, {user ? user.name : "Usuario"}
+                            </button>
+                            <ul className="dropdown-menu" aria-labelledby="userDropdown">
+                            <li>
+                                <Link className="dropdown-item" to="/MisAreasNaturales">
+                                Mis áreas naturales
+                                </Link>
+                            </li>
+                            <li>
+                                <Link className="dropdown-item" to="/MisEspeciesAvistadas">
+                                Mis especies avistadas
+                                </Link>
+                            </li>
+                            <li>
+                                <Link className="dropdown-item" to="/MisActividades">
+                                Mis actividades de conservación
+                                </Link>
+                            </li>
+                            </ul>
+                        </div>
+                        </div>
+                        <button
+                        className="btn btn-outline-danger"
+                        type="button"
+                        onClick={() => navigate("/ListaUsuarios")}
+                        >
+                        Usuarios
+                        </button>
+                        <button
+                        className="btn btn-outline-danger"
+                        type="button"
+                        onClick={() => {
+                            localStorage.removeItem("user"); // Elimina el usuario guardado
+                            setIsAuthenticated(false); // Quita la autenticación
+                            navigate("/"); // Redirige al login
+                        }}
+                        >
+                        Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    <div>
+            <div className="container mt-4">
+                <h1>{area.name}</h1>
+                <p>{area.description}</p>
+                <p><strong>Direccion:</strong>{area.location}</p>
+                <p><strong>Tipo:</strong> {area.areaType}</p>
+                <p><strong>Pais:</strong> {area.region}</p>
+                <p><strong>Estado:</strong> {area.conservationStatus}</p>
+                <p><strong>Imagen:</strong>
+                    <img src={area.imageUrl} alt={area.name} width="300" />
+                </p>
+            </div>
+        </div>
+    </div>    
+    );
+};
+
+export default AreaNatural;

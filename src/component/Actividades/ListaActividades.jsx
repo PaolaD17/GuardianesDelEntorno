@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import './ListaActividades.css'; // Importar el archivo CSS
 
 const ListaActividades = ({ setIsAuthenticated }) => {
     const [actividades, setActividades] = useState([]);
     const [error, setError] = useState("");
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(1); // Página inicial
     const pageSize = 10;
 
     const navigate = useNavigate();
     const user = useSelector((state) => state.user.user);
 
+    // Llamada a la API para obtener las áreas
     const fetchActividades = async (pageNumber) => {
         try {
             const response = await fetch(
-                `https://mammal-excited-tarpon.ngrok-free.app/api/conservation-activity/list?secret=TallerReact2025!`,
+                `https://mammal-excited-tarpon.ngrok-free.app/api/conservation-activity/list?secret=TallerReact2025!&NaturalAreaId=1&page=1&pageSize=10`,
                 {
                     method: "GET",
                     headers: {
@@ -30,15 +30,23 @@ const ListaActividades = ({ setIsAuthenticated }) => {
             }
 
             const data = await response.json();
-            if (data.items) setActividades(data.items);
-            } catch {
-                setError("Error al obtener las actividades de conservación.");
+            if (data.items) {
+                // Si ya hay actividades, agregamos las nuevas, si no, simplemente las ponemos
+                setActividades((prevActividades) => [...prevActividades, ...data.items]);
             }
+        } catch {
+            setError("Error al obtener las áreas naturales.");
+        }
     };
 
     const handleLoadMore = () => {
-        fetchActividades();
+        const nextPage = page + 1; // Incrementa la página
+        setPage(nextPage); // Actualiza el estado de la página
     };
+
+    React.useEffect(() => {
+        fetchActividades(page); // Llama a la API con la página actual
+    }, [page]);
 
     return (
         <div>
@@ -58,15 +66,15 @@ const ListaActividades = ({ setIsAuthenticated }) => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Áreas Naturales
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <Link className="dropdown-item" to="/MisActividadesNaturales">Mis actividades</Link>
+                                        <Link className="dropdown-item" to="/ListaAreasNaturales">Mis áreas naturales</Link>
                                     </li>
                                     <li>
-                                        <Link className="dropdown-item" to="/AgregarActividadNatural">Agregar actividad</Link>
+                                        <Link className="dropdown-item" to="/AgregarAreaNatural">Agregar área natural</Link>
                                     </li>
                                 </ul>
                             </li>
@@ -85,7 +93,7 @@ const ListaActividades = ({ setIsAuthenticated }) => {
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Actividades de conservación
+                                    Actividades
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
@@ -98,19 +106,53 @@ const ListaActividades = ({ setIsAuthenticated }) => {
                             </li>
                         </ul>
                         <form className="d-flex" role="search">
-                            <span className="me-2 align-self-center">
-                                Hola, {user ? user.name : "Usuario"}
-                            </span>
-                            <button
-                                className="btn btn-outline-danger"
+                            <div className="me-2 align-self-center">
+                            <div className="dropdown">
+                                <button
+                                className="btn btn-outline-secondary dropdown-toggle"
                                 type="button"
-                                onClick={() => {
-                                    localStorage.removeItem("user");
-                                    setIsAuthenticated(false);
-                                    navigate("/");
-                                }}
+                                id="userDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                >
+                                Hola, {user ? user.name : "Usuario"}
+                                </button>
+                                <ul className="dropdown-menu" aria-labelledby="userDropdown">
+                                <li>
+                                    <Link className="dropdown-item" to="/MisAreasNaturales">
+                                    Mis áreas naturales
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisEspeciesAvistadas">
+                                    Mis especies avistadas
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisActividades">
+                                    Mis actividades de conservación
+                                    </Link>
+                                </li>
+                                </ul>
+                            </div>
+                            </div>
+                            <button
+                            className="btn btn-outline-danger"
+                            type="button"
+                            onClick={() => navigate("/ListaUsuarios")}
                             >
-                                Cerrar Sesión
+                            Usuarios
+                            </button>
+                            <button
+                            className="btn btn-outline-danger"
+                            type="button"
+                            onClick={() => {
+                                localStorage.removeItem("user"); // Elimina el usuario guardado
+                                setIsAuthenticated(false); // Quita la autenticación
+                                navigate("/"); // Redirige al login
+                            }}
+                            >
+                            Cerrar Sesión
                             </button>
                         </form>
                     </div>
@@ -122,7 +164,7 @@ const ListaActividades = ({ setIsAuthenticated }) => {
                 <div className="card shadow-lg">
                     <div className="card-body">
                         <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h2 className="card-title m-0">Lista de actividades de conservación</h2>
+                            <h2 className="card-title m-0">Lista de Actividades de Conservación</h2>
                         </div>
 
                         {error && <div className="alert alert-danger text-center">{error}</div>}
@@ -130,18 +172,15 @@ const ListaActividades = ({ setIsAuthenticated }) => {
                         <ul className="list-group">
                             {actividades.map((actividad) => (
                                 <li key={actividad.id} className="list-group-item">
-                                    <h5 className="mb-1">{actividad.name}</h5>
+                                    <h5 className="mb-1"> 
+                                    <Link to={`/Actividad/${actividad.id}`} className="text-decoration-none">
+                                        {actividad.name}
+                                    </Link>    
+                                    </h5>
                                     <p className="text-muted">{actividad.email}</p>
                                 </li>
                             ))}
                         </ul>
-
-                        <button
-                            onClick={handleLoadMore}
-                            className="btn btn-secondary w-100 mt-3"
-                        >
-                            Cargar más
-                        </button>
                     </div>
                 </div>
             </div>

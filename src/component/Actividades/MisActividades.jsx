@@ -98,19 +98,53 @@ const ListaActividades = ({ setIsAuthenticated }) => {
                             </li>
                         </ul>
                         <form className="d-flex" role="search">
-                            <span className="me-2 align-self-center">
-                                Hola, {user ? user.name : "Usuario"}
-                            </span>
-                            <button
-                                className="btn btn-outline-danger"
+                            <div className="me-2 align-self-center">
+                            <div className="dropdown">
+                                <button
+                                className="btn btn-outline-secondary dropdown-toggle"
                                 type="button"
-                                onClick={() => {
-                                    localStorage.removeItem("user");
-                                    setIsAuthenticated(false);
-                                    navigate("/");
-                                }}
+                                id="userDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                >
+                                Hola, {user ? user.name : "Usuario"}
+                                </button>
+                                <ul className="dropdown-menu" aria-labelledby="userDropdown">
+                                <li>
+                                    <Link className="dropdown-item" to="/MisAreasNaturales">
+                                    Mis áreas naturales
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisEspeciesAvistadas">
+                                    Mis especies avistadas
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisActividades">
+                                    Mis actividades de conservación
+                                    </Link>
+                                </li>
+                                </ul>
+                            </div>
+                            </div>
+                            <button
+                            className="btn btn-outline-danger"
+                            type="button"
+                            onClick={() => navigate("/ListaUsuarios")}
                             >
-                                Cerrar Sesión
+                            Usuarios
+                            </button>
+                            <button
+                            className="btn btn-outline-danger"
+                            type="button"
+                            onClick={() => {
+                                localStorage.removeItem("user"); // Elimina el usuario guardado
+                                setIsAuthenticated(false); // Quita la autenticación
+                                navigate("/"); // Redirige al login
+                            }}
+                            >
+                            Cerrar Sesión
                             </button>
                         </form>
                     </div>

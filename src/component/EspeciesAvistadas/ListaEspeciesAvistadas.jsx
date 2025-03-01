@@ -30,21 +30,22 @@ const ListaEspeciesAvistadas = ({ setIsAuthenticated }) => {
             }
 
             const data = await response.json();
-            console.log("Data fetched:", data); // Verifica los datos
-            if (data.items) setEspecies((prev) => [...prev, ...data.items]);  // Agrega las nuevas especies
+            if (data.items) {
+                setEspecies((prevEspecies) => [...prevEspecies, ...data.items]);  // Agrega las nuevas especies
+            }
         } catch {
             setError("Error al obtener las especies avistadas.");
         }
     };
 
-    // Cargar especies al montar el componente
-    useEffect(() => {
-        fetchEspecies(page);  // Llama a la API para cargar especies
-    }, [page]);  // La llamada se hará cuando la página cambie
-
     const handleLoadMore = () => {
-        setPage((prevPage) => prevPage + 1);  // Incrementa la página y carga más especies
+        const nextPage = page + 1; // Incrementa la página
+        setPage(nextPage); // Actualiza el estado de la página
     };
+
+    React.useEffect(() => {
+        fetchEspecies(page); // Llama a la API con la página actual
+    }, [page]);
 
     return (
         <div>
@@ -104,19 +105,53 @@ const ListaEspeciesAvistadas = ({ setIsAuthenticated }) => {
                             </li>
                         </ul>
                         <form className="d-flex" role="search">
-                            <span className="me-2 align-self-center">
-                                Hola, {user ? user.name : "Usuario"}
-                            </span>
-                            <button
-                                className="btn btn-outline-danger"
+                            <div className="me-2 align-self-center">
+                            <div className="dropdown">
+                                <button
+                                className="btn btn-outline-secondary dropdown-toggle"
                                 type="button"
-                                onClick={() => {
-                                    localStorage.removeItem("user");
-                                    setIsAuthenticated(false);
-                                    navigate("/");
-                                }}
+                                id="userDropdown"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                >
+                                Hola, {user ? user.name : "Usuario"}
+                                </button>
+                                <ul className="dropdown-menu" aria-labelledby="userDropdown">
+                                <li>
+                                    <Link className="dropdown-item" to="/MisAreasNaturales">
+                                    Mis áreas naturales
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisEspeciesAvistadas">
+                                    Mis especies avistadas
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisActividades">
+                                    Mis actividades de conservación
+                                    </Link>
+                                </li>
+                                </ul>
+                            </div>
+                            </div>
+                            <button
+                            className="btn btn-outline-danger"
+                            type="button"
+                            onClick={() => navigate("/ListaUsuarios")}
                             >
-                                Cerrar Sesión
+                            Usuarios
+                            </button>
+                            <button
+                            className="btn btn-outline-danger"
+                            type="button"
+                            onClick={() => {
+                                localStorage.removeItem("user"); // Elimina el usuario guardado
+                                setIsAuthenticated(false); // Quita la autenticación
+                                navigate("/"); // Redirige al login
+                            }}
+                            >
+                            Cerrar Sesión
                             </button>
                         </form>
                     </div>
@@ -130,34 +165,29 @@ const ListaEspeciesAvistadas = ({ setIsAuthenticated }) => {
                             <h2 className="card-title m-0">Lista de Especies Avistadas</h2>
                         </div>
 
+                        {error && <div className="alert alert-danger text-center">{error}</div>}
+                        
                         <ul className="list-group">
                             {especies.length === 0 && !error ? (
                                 <div className="alert alert-info text-center">No hay especies disponibles.</div>
                             ) : (
                                 especies.map((especie) => (
                                     <li key={especie.id} className="list-group-item">
-                                        <h5 className="mb-1">{especie.commonName}</h5>
+                                        <h5 className="mb-1">
+                                            <Link to={`/EspecieAvistada/${especie.id}`} className="text-decoration-none">
+                                                {especie.commonName}
+                                            </Link>
+                                        </h5>
                                         <p className="text-muted">Área Natural: {especie.naturalAreaId}</p>
                                     </li>
                                 ))
                             )}
                         </ul>
-
-                        {error && <div className="alert alert-danger text-center">{error}</div>}
-
-                        {/* Botón "Cargar más" */}
-                        <button 
-                            onClick={handleLoadMore} 
-                            className="btn btn-secondary w-100 mt-3"
-                        >
-                            Cargar más
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     );
 };
-
 
 export default ListaEspeciesAvistadas;
