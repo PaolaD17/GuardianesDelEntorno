@@ -18,7 +18,7 @@ const Registro = ({ setIsAuthenticated }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
+    if (!nombre || !nombreDeUsuario || !email || !password) {
       setError("Por favor, complete todos los campos.");
       return;
     }
@@ -26,43 +26,40 @@ const Registro = ({ setIsAuthenticated }) => {
     setMessage("");
 
     try {
-      const response = await fetch(
-        "https://mammal-excited-tarpon.ngrok-free.app/api/user/register?secret=TallerReact2025!",
-        {
-          method: "POST",
+      const response = await fetch('https://mammal-excited-tarpon.ngrok-free.app/api/user/register?secret=TallerReact2025!', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+              'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ nombre, nombreDeUsuario, email, password }),
-        }
-      );
+          body: JSON.stringify({
+              user: {
+                  name: nombre,
+                  username: nombreDeUsuario,
+                  email: email,
+                  password: password
+              }
+          })
+      });
 
-      if (response.status === 403) {
-        setError("Acceso denegado: Código secreto incorrecto");
-        return;
+      if (response.status === 409) {
+          throw new Error("El correo electrónico ya está en uso.");
       }
-      if (response.status === 500) {
-        setError("Error interno del servidor");
-        return;
+
+      if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       const data = await response.json();
-      if (data.isValid && data.user) {
-        setMessage("Registro exitoso!!");
 
-        // Guardar usuario en Redux
-        dispatch(setUser(data.user));
-
-        // Marcar como autenticado
-        setIsAuthenticated(true);
-
-        // Redirigir a login
-        navigate("/login");
+      if (data.Result === true) {
+          alert("Usuario registrado correctamente, ya puede iniciar sesión.");
       } else {
-        setError("Credenciales incorrectas");
+          alert("Error al registrar usuario.");
       }
-    } catch (error) {
-      setError("Error al conectar con el servidor");
+
+  } catch (error) {
+      setError(error.message);
+      alert(`Error: ${error.message}`);
     }
   };
 

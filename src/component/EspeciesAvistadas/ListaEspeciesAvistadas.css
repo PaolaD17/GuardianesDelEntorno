@@ -1,20 +1,19 @@
-.listaEspeciesAvistadas {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin: 0 200px 50px 200px;
-  }
-
-.text-center{
-    text-align: center;
+/* Aseguramos que la barra de navegación se quede fija en la parte superior */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000; /* Para que se quede encima del contenido */
+  background-color: #f8f9fa; /* Color de fondo para visibilidad */
 }
 
-.container h1 {
-    text-align: center;
-    font-size: 3rem;
-    margin: 0;
-    padding: 2rem 0;
-    user-select: none;
-  }
+/* Aplicamos padding al contenido para que no se superponga con la barra de navegación */
+.container {
+  padding-top: 90px; /* Ajusta esta altura según el tamaño de tu barra de navegación */
+}
+
+/* Aseguramos que el contenido no se quede pegado a la parte superior */
+.card {
+  margin-top: 20px; /* Ajusta este margen si lo necesitas */
+}

@@ -1,15 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = null; // Estado inicial es null
+const initialState = {
+  user: null, // Aquí se guarda el usuario
+};
 
-const userSlice = createSlice({
+export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (_, action) => action.payload, // Guarda directamente el usuario
-    logout: () => null, // Restablece el usuario a null en el logout
+    setUser: (state, action) => {
+      state.user = action.payload; // Aquí se guarda el usuario que viene del backend
+    },
+    logout: (state) => {
+      state.user = null;
+    },
   },
 });
 
 export const { setUser, logout } = userSlice.actions;
-export default userSlice.reducer; //createSlice devuleve un objeto y una propiedad de ellas es el reducer, por eso podemos hacer .reducer
+export default userSlice.reducer;

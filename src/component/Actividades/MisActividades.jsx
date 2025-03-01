@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import './ListaAreasNaturales.css'; // Importar el archivo CSS
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import './MisActividades.css'; // Importar el archivo CSS
 
-const ListaAreasNaturales = ({ setIsAuthenticated }) => {
-    const [areas, setAreas] = useState([]);
+const ListaActividades = ({ setIsAuthenticated }) => {
+    const [actividades, setActividades] = useState([]);
     const [error, setError] = useState("");
-    const [page, setPage] = useState(1); // Página inicial
+    const [page, setPage] = useState(1);
     const pageSize = 10;
 
     const navigate = useNavigate();
     const user = useSelector((state) => state.user.user);
 
-    const fetchAreas = async (pageNumber) => {
+    const fetchActividades = async (pageNumber) => {
         try {
             const response = await fetch(
-                `https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&userId=123&page=${pageNumber}&pageSize=${pageSize}`,
+                `https://mammal-excited-tarpon.ngrok-free.app/api/natural-actividad/list?secret=TallerReact2025!&userId=123&page=1&pageSize=10`,
                 {
                     method: "GET",
                     headers: {
@@ -30,23 +30,15 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
             }
 
             const data = await response.json();
-            if (data.items) {
-                // Si ya hay áreas, agregamos las nuevas, si no, simplemente las ponemos
-                setAreas((prevAreas) => [...prevAreas, ...data.items]);
+            if (data.items) setActividades(data.items);
+            } catch {
+                setError("Error al obtener las actividades.");
             }
-        } catch {
-            setError("Error al obtener las áreas naturales.");
-        }
     };
 
     const handleLoadMore = () => {
-        const nextPage = page + 1; // Incrementa la página
-        setPage(nextPage); // Actualiza el estado de la página
+        fetchActividades();
     };
-
-    React.useEffect(() => {
-        fetchAreas(page); // Llama a la API con la página actual
-    }, [page]);
 
     return (
         <div>
@@ -71,7 +63,7 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <Link className="dropdown-item" to="/ListaAreasNaturales">Mis áreas naturales</Link>
+                                        <Link className="dropdown-item" to="/ListaAreasNaturales">Mis áreas naturales </Link>
                                     </li>
                                     <li>
                                         <Link className="dropdown-item" to="/AgregarAreaNatural">Agregar área natural</Link>
@@ -97,7 +89,7 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <Link className="dropdown-item" to="/MisActividades">Mis actividades</Link>
+                                        <Link className="dropdown-item" to="/MisActiviades">Mis actividades</Link>
                                     </li>
                                     <li>
                                         <Link className="dropdown-item" to="/AgregarActividad">Agregar actividad</Link>
@@ -130,20 +122,16 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
                 <div className="card shadow-lg">
                     <div className="card-body">
                         <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h2 className="card-title m-0">Lista de Areas Naturales</h2>
+                            <h2 className="card-title m-0">Lista de Actividades de Conservación</h2>
                         </div>
 
                         {error && <div className="alert alert-danger text-center">{error}</div>}
 
                         <ul className="list-group">
-                            {areas.map((area) => (
-                                <li key={area.id} className="list-group-item">
-                                    <h5 className="mb-1"> 
-                                    <Link to={`/AreaNatural/${area.id}`} className="text-decoration-none">
-                                        {area.name}
-                                    </Link>    
-                                    </h5>
-                                    <p className="text-muted">{area.email}</p>
+                            {actividades.map((actividad) => (
+                                <li key={actividad.id} className="list-group-item">
+                                    <h5 className="mb-1">{actividad.name}</h5>
+                                    <p className="text-muted">{actividad.email}</p>
                                 </li>
                             ))}
                         </ul>
@@ -161,5 +149,4 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
     );
 };
 
-export default ListaAreasNaturales;
-    
+export default ListaActividades;

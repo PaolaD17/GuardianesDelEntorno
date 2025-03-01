@@ -1,0 +1,10 @@
+/* ListaAreasNaturales.css */
+.container {
+    padding-top: 80px; /* Asegura que el contenido no quede tapado por la barra de navegación */
+}
+.card-body {
+    background-color: #f9f9f9;
+}
+.list-group-item {
+    margin-bottom: 10px;
+}

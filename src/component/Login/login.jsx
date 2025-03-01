@@ -47,15 +47,18 @@ const Login = ({ setIsAuthenticated }) => {
       const data = await response.json();
       if (data.isValid && data.user) {
         setMessage("Login exitoso!!");
+      
+        // 🔥 Guardar usuario en localStorage
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         // Guardar usuario en Redux
         dispatch(setUser(data.user));
-
+      
         // Marcar como autenticado
         setIsAuthenticated(true);
-
+      
         // Redirigir a la Pantalla Principal
-        navigate("/pantallaPrincipal");
+        navigate("/pantallaPrincipal");      
       } else {
         setError("Credenciales incorrectas");
       }

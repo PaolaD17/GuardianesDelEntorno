@@ -1,22 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import './ListaAreasNaturales.css'; // Importar el archivo CSS
-import { Link } from "react-router-dom";
+import './MisEspeciesAvistadas.css'; // Importar el archivo CSS;
 
-const ListaAreasNaturales = ({ setIsAuthenticated }) => {
-    const [areas, setAreas] = useState([]);
+const MisEspeciesAvistadas = ({ setIsAuthenticated }) => {
+    const [especies, setEspecies] = useState([]);
     const [error, setError] = useState("");
-    const [page, setPage] = useState(1); // Página inicial
+    const [page, setPage] = useState(1);
     const pageSize = 10;
 
     const navigate = useNavigate();
     const user = useSelector((state) => state.user.user);
 
-    const fetchAreas = async (pageNumber) => {
+    useEffect(() => {
+        fetchEspecies(page);
+    }, []);
+    
+    const fetchEspecies = async (pageNumber = 1) => {
+        if (pageNumber <= 0) {
+            return; // No sigas cargando si la página es 0
+        }
+    
         try {
             const response = await fetch(
-                `https://mammal-excited-tarpon.ngrok-free.app/api/natural-area/list?secret=TallerReact2025!&userId=123&page=${pageNumber}&pageSize=${pageSize}`,
+                `https://mammal-excited-tarpon.ngrok-free.app/api/species/byUser?secret=TallerReact2025!`,
                 {
                     method: "GET",
                     headers: {
@@ -25,28 +32,32 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
                     },
                 }
             );
+    
             if (!response.ok) {
                 throw new Error(`Error en la API: ${response.status}`);
             }
-
+    
             const data = await response.json();
-            if (data.items) {
-                // Si ya hay áreas, agregamos las nuevas, si no, simplemente las ponemos
-                setAreas((prevAreas) => [...prevAreas, ...data.items]);
+    
+            if (data.items.length > 0) {
+                setEspecies((prevEspecies) => [...prevEspecies, ...data.items]);
+            } else if (pageNumber === 1) {
+                setError("No tienes especies avistadas.");
             }
-        } catch {
-            setError("Error al obtener las áreas naturales.");
+    
+        } catch (error) {
+            setError("Error al obtener las especies avistadas.");
         }
     };
+    
 
     const handleLoadMore = () => {
-        const nextPage = page + 1; // Incrementa la página
-        setPage(nextPage); // Actualiza el estado de la página
+        setPage((prevPage) => {
+            const nextPage = prevPage + 1;
+            fetchEspecies(nextPage);
+            return nextPage;
+        });
     };
-
-    React.useEffect(() => {
-        fetchAreas(page); // Llama a la API con la página actual
-    }, [page]);
 
     return (
         <div>
@@ -66,41 +77,41 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Áreas Naturales
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li>
-                                        <Link className="dropdown-item" to="/ListaAreasNaturales">Mis áreas naturales</Link>
-                                    </li>
-                                    <li>
-                                        <Link className="dropdown-item" to="/AgregarAreaNatural">Agregar área natural</Link>
-                                    </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisAreasNaturales">Mis áreas naturales</Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/AgregarAreaNatural">Agregar área natural</Link>
+                                </li>
                                 </ul>
                             </li>
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Especies Avistadas
                                 </a>
                                 <ul className="dropdown-menu">
-                                    <li>
-                                        <Link className="dropdown-item" to="/MisEspeciesAvistadas">Mis especies avistadas</Link>
-                                    </li>
-                                    <li>
-                                        <Link className="dropdown-item" to="/AgregarEspecieAvistada">Agregar especie avistada</Link>
-                                    </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/MisEspeciesAvistadas">Mis especies avistadas</Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item" to="/AgregarEspecieAvistada">Agregar especie avistada</Link>
+                                </li>
                                 </ul>
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Actividades
+                                    Actividades de conservación
                                 </a>
                                 <ul className="dropdown-menu">
                                     <li>
                                         <Link className="dropdown-item" to="/MisActividades">Mis actividades</Link>
                                     </li>
                                     <li>
-                                        <Link className="dropdown-item" to="/AgregarActividad">Agregar actividad</Link>
+                                        <Link className="dropdown-item" to="/AgregarActividad">Agregar actividades</Link>
                                     </li>
                                 </ul>
                             </li>
@@ -124,32 +135,28 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
                     </div>
                 </div>
             </nav>
-
-            {/* Contenedor del contenido con padding-top para que no quede tapado */}
+             {/* Contenedor del contenido con padding-top para que no quede tapado */}
             <div className="container mt-4">
                 <div className="card shadow-lg">
                     <div className="card-body">
                         <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h2 className="card-title m-0">Lista de Areas Naturales</h2>
+                            <h2 className="card-title m-0">Lista de mis especies avistadas</h2>
                         </div>
-
+            
                         {error && <div className="alert alert-danger text-center">{error}</div>}
-
+            
                         <ul className="list-group">
-                            {areas.map((area) => (
-                                <li key={area.id} className="list-group-item">
-                                    <h5 className="mb-1"> 
-                                    <Link to={`/AreaNatural/${area.id}`} className="text-decoration-none">
-                                        {area.name}
-                                    </Link>    
-                                    </h5>
-                                    <p className="text-muted">{area.email}</p>
+                            {especies.map((especie) => (
+                                <li key={especie.id} className="list-group-item">
+                                    <h5 className="mb-1">{especie.name}</h5>
+                                    <p className="text-muted">{especie.email}</p>
                                 </li>
                             ))}
                         </ul>
-
-                        <button
-                            onClick={handleLoadMore}
+            
+                        {/* Botón "Cargar más" corregido */}
+                        <button 
+                            onClick={handleLoadMore} 
                             className="btn btn-secondary w-100 mt-3"
                         >
                             Cargar más
@@ -158,8 +165,7 @@ const ListaAreasNaturales = ({ setIsAuthenticated }) => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ListaAreasNaturales;
-    
+export default MisEspeciesAvistadas;
